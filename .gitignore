@@ -219,6 +219,8 @@ pip-log.txt
 #############
 
 *.iml
+*.ipr
+*.iws
 .gradle/
 .idea/
 jars/
