@@ -193,6 +193,7 @@ $RECYCLE.BIN/
 *.egg-info
 dist/
 build/
+run/
 eggs/
 parts/
 var/

@@ -55,13 +55,17 @@ public class ItemLootChest extends Item
             
 	    	List<BigItemStack> lootItems = new ArrayList<>();
             String lootName = tag.getString("fixedLootName");
-            NBTTagList lootList = tag.getTagList("fixedLootList", 10);
-            
-            for(int i = 0; i < lootList.tagCount(); i++)
+
+            LootGroup group = LootRegistry.INSTANCE.getGroupByName(lootName);
+            String title = "No Loot Setup";
+
+            if(group != null)
             {
-                lootItems.add(BigItemStack.loadItemStackFromNBT(lootList.getCompoundTagAt(i)));
+                title = group.name;
+                List<BigItemStack> tmp = group.getRandomReward(itemRand);
+                if(tmp != null) lootItems.addAll(tmp);
             }
-	    	
+
 	    	boolean invoChanged = false;
 	    	for(BigItemStack s1 : lootItems)
 	    	{
@@ -83,7 +87,7 @@ public class ItemLootChest extends Item
 	    		player.inventoryContainer.detectAndSendChanges();
             }
 	    	
-            NetLootClaim.sendReward((EntityPlayerMP)player, lootName, lootItems.toArray(new BigItemStack[0]));
+            NetLootClaim.sendReward((EntityPlayerMP)player, title, lootItems.toArray(new BigItemStack[0]));
         } else if(stack.getItemDamage() == 103)
         {
             if(world.isRemote || !(player instanceof EntityPlayerMP))

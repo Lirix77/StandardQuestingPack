@@ -68,6 +68,16 @@ public class LootRegistry extends SimpleDatabase<LootGroup> implements INBTParti
 		
 		return null;
     }
+
+	public LootGroup getGroupByName(String nameGroup)
+	{
+		List<DBEntry<LootGroup>> LootGroups = new ArrayList<>(getEntries());
+		for(DBEntry<LootGroup> entry : LootGroups)
+		{
+			if(entry.getValue().name.equals(nameGroup)) return entry.getValue();
+		}
+		return null;
+	}
     
     @Override
     public synchronized NBTTagCompound writeToNBT(NBTTagCompound tag, @Nullable List<Integer> subset)
