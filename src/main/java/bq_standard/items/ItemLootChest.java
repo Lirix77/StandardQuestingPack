@@ -264,7 +264,6 @@ public class ItemLootChest extends Item
         {
             if(tag == null) return;
             tooltip.add(QuestTranslation.translate("bq_standard.tooltip.fixed_loot", tag.getString("fixedLootName")));
-            tooltip.add(QuestTranslation.translate("bq_standard.tooltip.fixed_loot_size", tag.getTagList("fixedLootList", 10).tagCount()));
         } else if(stack.getItemDamage() == 103)
         {
             if(tag == null) return;
