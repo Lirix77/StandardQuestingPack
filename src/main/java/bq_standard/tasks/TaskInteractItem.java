@@ -40,7 +40,7 @@ public class TaskInteractItem implements ITask
     public BigItemStack targetItem = null;
     public final NbtBlockType targetBlock = new NbtBlockType(null);
 	public boolean partialMatch = true;
-	public boolean ignoreNBT = false;
+	public boolean ignoreNBT = true;
 	public boolean onInteract = true;
 	public boolean onHit = false;
 	public int required = 1;

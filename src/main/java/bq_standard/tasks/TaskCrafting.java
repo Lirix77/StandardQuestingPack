@@ -33,7 +33,7 @@ public class TaskCrafting implements ITask
 	public final List<BigItemStack> requiredItems = new ArrayList<>();
 	public final TreeMap<UUID, int[]> userProgress = new TreeMap<>();
 	public boolean partialMatch = true;
-	public boolean ignoreNBT = false;
+	public boolean ignoreNBT = true;
 	public boolean allowAnvil = false;
 	public boolean allowSmelt = true;
 	public boolean allowCraft = true;
