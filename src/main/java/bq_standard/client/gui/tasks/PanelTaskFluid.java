@@ -3,6 +3,7 @@ package bq_standard.client.gui.tasks;
 import betterquesting.api.api.QuestingAPI;
 import betterquesting.api2.client.gui.misc.*;
 import betterquesting.api2.client.gui.panels.CanvasEmpty;
+import betterquesting.api2.client.gui.panels.CanvasMinimum;
 import betterquesting.api2.client.gui.panels.bars.PanelVScrollBar;
 import betterquesting.api2.client.gui.panels.content.PanelFluidSlot;
 import betterquesting.api2.client.gui.panels.content.PanelTextBox;
@@ -19,36 +20,29 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.UUID;
 
-public class PanelTaskFluid extends CanvasEmpty
+public class PanelTaskFluid extends CanvasMinimum
 {
     private final TaskFluid task;
+    private final IGuiRect initialRect;
     
     public PanelTaskFluid(IGuiRect rect, TaskFluid task)
     {
         super(rect);
         this.task = task;
+        initialRect = rect;
     }
     
     @Override
     public void initPanel()
     {
         super.initPanel();
-        
+
         UUID uuid = QuestingAPI.getQuestingUUID(Minecraft.getMinecraft().thePlayer);
         int[] progress = task.getUsersProgress(uuid);
         boolean isComplete = task.isComplete(uuid);
-        
+        int listW = initialRect.getWidth();
         String sCon = (task.consume ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + QuestTranslation.translate(task.consume ? "gui.yes" : "gui.no");
-        this.addPanel(new PanelTextBox(new GuiTransform(GuiAlign.TOP_EDGE, new GuiPadding(0, 0, 0, -16), 0), QuestTranslation.translate("bq_standard.btn.consume", sCon)).setColor(PresetColor.TEXT_MAIN.getColor()));
-        
-        CanvasScrolling cvList = new CanvasScrolling(new GuiTransform(GuiAlign.FULL_BOX, new GuiPadding(0, 16, 8, 0), 0));
-        this.addPanel(cvList);
-    
-        PanelVScrollBar scList = new PanelVScrollBar(new GuiTransform(GuiAlign.RIGHT_EDGE, new GuiPadding(-8, 16, 0, 0), 0));
-        this.addPanel(scList);
-        cvList.setScrollDriverY(scList);
-        
-        int listW = cvList.getTransform().getWidth();
+        this.addPanel(new PanelTextBox(new GuiTransform(GuiAlign.TOP_EDGE, 0, 0, listW, 12, 0), QuestTranslation.translate("bq_standard.btn.consume", sCon)).setColor(PresetColor.TEXT_MAIN.getColor()));
         
         for(int i = 0; i < task.requiredFluids.size(); i++)
         {
@@ -59,9 +53,9 @@ public class PanelTaskFluid extends CanvasEmpty
                 continue;
             }
     
-            PanelFluidSlot slot = new PanelFluidSlot(new GuiRectangle(0, i * 36, 36, 36, 0), -1, stack);
+            PanelFluidSlot slot = new PanelFluidSlot(new GuiRectangle(0, i * 28 + 12, 28, 28, 0), -1, stack);
             if(BQ_Standard.hasNEI) slot.setCallback(this::lookupRecipe);
-            cvList.addPanel(slot);
+            this.addPanel(slot);
             
             StringBuilder sb = new StringBuilder();
             
@@ -76,10 +70,11 @@ public class PanelTaskFluid extends CanvasEmpty
 				sb.append(EnumChatFormatting.RED).append(QuestTranslation.translate("betterquesting.tooltip.incomplete"));
 			}
             
-            PanelTextBox text = new PanelTextBox(new GuiRectangle(40, i * 36, listW - 40, 36, 0), sb.toString());
+            PanelTextBox text = new PanelTextBox(new GuiRectangle(36, i * 28 + 12, listW - 36, 28, 0), sb.toString());
 			text.setColor(PresetColor.TEXT_MAIN.getColor());
-			cvList.addPanel(text);
+			this.addPanel(text);
         }
+        recalcSizes();
     }
     
     @Method(modid = "NotEnoughItems")
